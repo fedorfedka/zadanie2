@@ -37,9 +37,6 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto getUserById(Long id) {
         ListUser user = userModel.findById(id);
-        if (user == null) {
-            return null;
-        }
         return new UserDto(id, user.getDefaultCurrency(), user.getName());
     }
 

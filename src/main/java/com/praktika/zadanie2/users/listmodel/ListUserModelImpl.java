@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.praktika.zadanie2.exceptions.EntityDoesntExistException;
+import com.praktika.zadanie2.exceptions.NullFieldException;
+
 @Component
 public class ListUserModelImpl implements ListUserModel{
     List<ListUser> users = new ArrayList<>();
@@ -21,9 +24,13 @@ public class ListUserModelImpl implements ListUserModel{
 
     @Override
     public ListUser create(ListUser user) {
-        user.setId(getNextId());
-        users.add(user);
-        return user;
+        if (user.getName() != null && user.getDefaultCurrency() != null) {
+            user.setId(getNextId());
+            users.add(user);
+            return user;
+        }
+        
+        throw new NullFieldException();
     }
 
     @Override
@@ -33,7 +40,8 @@ public class ListUserModelImpl implements ListUserModel{
                 return user;
             }
         }
-        return null;
+
+        throw new EntityDoesntExistException();
     }
 
     @Override
@@ -55,13 +63,15 @@ public class ListUserModelImpl implements ListUserModel{
 
     @Override
     public ListUser delete(Long id) {
+        ListUser user = null;
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getId().equals(id)) {
+                user = users.get(i);
                 users.remove(i);
-                return users.get(i);
+                return user;
             }
         }
-        return null;
+        return user;
     }
 }
 

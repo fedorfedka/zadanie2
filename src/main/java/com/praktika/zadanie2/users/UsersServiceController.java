@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.praktika.zadanie2.exceptions.EntityDoesntExistException;
+
 @RestController
 @RequestMapping("/users")
 public class UsersServiceController {
@@ -39,9 +41,16 @@ public class UsersServiceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
-        UserDto user = usersService.getUserById(id);
-        usersService.deleteUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        try {
+            UserDto user = usersService.getUserById(id);
+            usersService.deleteUserById(id);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (EntityDoesntExistException e) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        
+        
+        
 
     }
 
