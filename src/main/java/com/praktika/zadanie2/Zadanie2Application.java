@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Zadanie2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Zadanie2Application.class, args);
+		SpringApplication application = new SpringApplication(Zadanie2Application.class);
+		application.setAdditionalProfiles("fakedb");
+		application.run(args);
+		
 	}
 
 }

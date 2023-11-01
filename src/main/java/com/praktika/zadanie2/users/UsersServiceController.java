@@ -1,8 +1,8 @@
 package com.praktika.zadanie2.users;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,32 +15,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/users")
 public class UsersServiceController {
+
+    
     @Autowired 
     UsersService usersService;
 
     @GetMapping
-    public Map<Long, User> getAllUsers() {
-        return usersService.getAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+        return new ResponseEntity<>(usersService.getAllUsers(), HttpStatus.OK);
     }
 
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto user) {
         usersService.createUser(user);
-        return user;
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return usersService.getUserById(id);
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return new ResponseEntity<>(usersService.getUserById(id), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        UserDto user = usersService.getUserById(id);
         usersService.deleteUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+
     }
 
     @PatchMapping("/{id}")
-    public void updateUserById(@PathVariable Long id, @RequestBody User user) {
-        usersService.updateUserById(id, user);;
+    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserDto user) {
+
+        if (usersService.getUserById(id) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            usersService.updateUserById(id, user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        
     }
 }
