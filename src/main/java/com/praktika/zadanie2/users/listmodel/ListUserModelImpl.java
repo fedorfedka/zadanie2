@@ -53,8 +53,13 @@ public class ListUserModelImpl implements ListUserModel{
     public ListUser update(Long id, ListUser user) {
         for (ListUser eachUser : users) {
             if (eachUser.getId().equals(id)) {
-                eachUser.setName(user.getName());
-                eachUser.setDefaultCurrency(user.getDefaultCurrency());
+                if (user.getName() != null) {
+                    eachUser.setName(user.getName());
+                }
+                if (user.getDefaultCurrency() != null) {
+                    eachUser.setDefaultCurrency(user.getDefaultCurrency());
+                }
+                
                 return eachUser;
             }
         }

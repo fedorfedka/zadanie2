@@ -29,8 +29,12 @@ public class UsersServiceController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDto user) {
-        usersService.createUser(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        if (user != null) {
+            usersService.createUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return null;
+        
     }
 
     @GetMapping("/{id}")
@@ -49,20 +53,22 @@ public class UsersServiceController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         
-        
-        
 
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserDto user) {
-
-        if (usersService.getUserById(id) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            usersService.updateUserById(id, user);
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody(required = false) UserDto user) {
+        if (user != null) {
+            UserDto foundUser = usersService.getUserById(id);
+            if (foundUser == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                usersService.updateUserById(id, user);
+                foundUser = usersService.getUserById(id);
+                return new ResponseEntity<>(foundUser, HttpStatus.OK);
+            }
         }
+        return new ResponseEntity<>(usersService.getUserById(id), HttpStatus.OK);
         
     }
 }
