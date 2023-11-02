@@ -1,4 +1,4 @@
-package com.praktika.zadanie2.users;
+package com.praktika.zadanie2.users.listmodel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.praktika.zadanie2.users.listmodel.ListUser;
-import com.praktika.zadanie2.users.listmodel.ListUserModel;
+import com.praktika.zadanie2.users.UserDto;
+import com.praktika.zadanie2.users.UsersService;
 
 @Service
 @Profile("fakedb")
-public class UsersServiceImpl implements UsersService {
+public class FakeDBUsersServiceImpl implements UsersService {
     @Autowired
     ListUserModel userModel;
 
@@ -61,3 +61,5 @@ public class UsersServiceImpl implements UsersService {
         return new UserDto(id, user.getDefaultCurrency(), user.getName());
     }
 }
+
+

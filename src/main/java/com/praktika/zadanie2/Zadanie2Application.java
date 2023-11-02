@@ -8,7 +8,12 @@ public class Zadanie2Application {
 
 	public static void main(String[] args) {
 		SpringApplication application = new SpringApplication(Zadanie2Application.class);
-		application.setAdditionalProfiles("fakedb");
+		
+		//profiles: 
+		//	"fakedb" (simulates db by list)
+		//	"postgres" (uses real db postgresql)
+		//	"mysql" (uses real db mysql)
+		application.setAdditionalProfiles("postgres");
 		application.run(args);
 		
 	}
