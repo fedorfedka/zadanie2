@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.praktika.zadanie2.exceptions.EntityDoesntExistException;
+import com.praktika.zadanie2.exceptions.NullFieldException;
 
 @RestController
 @RequestMapping("/users")
@@ -29,11 +30,13 @@ public class UsersServiceController {
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody UserDto user) {
-        if (user != null) {
-            usersService.createUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+        if (user.getDefaultCurrency() == null || user.getName() == null) {
+            throw new NullFieldException();
         }
-        return null;
+
+        UserDto createdUser = usersService.createUser(user);
+        return new ResponseEntity<>(createdUser, HttpStatus.OK);
+        
         
     }
 
@@ -46,8 +49,7 @@ public class UsersServiceController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         try {
-            UserDto user = usersService.getUserById(id);
-            usersService.deleteUserById(id);
+            UserDto user = usersService.deleteUserById(id);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (EntityDoesntExistException e) {
             return new ResponseEntity<>(HttpStatus.OK);
